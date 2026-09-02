@@ -6,17 +6,14 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>D:/logs/Inventory_Management_System/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>D:/logs/Inventory_Management_System/application-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <fieldNames>
-                <timestamp>timestamp</timestamp>
-            </fieldNames>
-            <customFields>{"service":"Inventory-catalog","environment":"production"}</customFields>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -25,7 +22,6 @@
         <appender-ref ref="FILE"/>
     </root>
 
-    <!-- Specific logger for your business package -->
     <logger name="com.kovanlabs.project" level="DEBUG"/>
 
 </configuration>

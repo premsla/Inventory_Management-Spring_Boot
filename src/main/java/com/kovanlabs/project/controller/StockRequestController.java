@@ -4,9 +4,9 @@ import com.kovanlabs.project.dto.StockRequestCreateDTO;
 import com.kovanlabs.project.dto.StockRequestDecisionDTO;
 import com.kovanlabs.project.model.StockRequest;
 import com.kovanlabs.project.service.StockRequestService;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -20,29 +20,28 @@ public class StockRequestController {
     }
 
     @PostMapping
-    public StockRequest create(@RequestBody StockRequestCreateDTO dto, Authentication authentication) {
-        return stockRequestService.createRequest(dto, authentication.getName());
+    public StockRequest create(@RequestBody StockRequestCreateDTO dto) {
+        return stockRequestService.createRequest(dto, "system");
     }
 
     @GetMapping("/pending")
-    public List<StockRequest> getPending(Authentication authentication) {
-        return stockRequestService.getPendingForOwner(authentication.getName());
+    public List<StockRequest> getPending() {
+        return Collections.emptyList();
     }
 
     @GetMapping("/my-branch")
-    public List<StockRequest> getMyBranchRequests(Authentication authentication) {
-        return stockRequestService.getRequestsForManager(authentication.getName());
+    public List<StockRequest> getMyBranchRequests() {
+        return Collections.emptyList();
     }
 
     @PostMapping("/{id}/approve")
     public org.springframework.http.ResponseEntity<?> approve(
             @PathVariable("id") Long id,
-            @RequestBody(required = false) StockRequestDecisionDTO dto,
-            org.springframework.security.core.Authentication authentication
+            @RequestBody(required = false) StockRequestDecisionDTO dto
     ) {
         try {
             String remark = dto == null ? null : dto.getRemark();
-            return org.springframework.http.ResponseEntity.ok(stockRequestService.approve(id, authentication.getName(), remark));
+            return org.springframework.http.ResponseEntity.ok(stockRequestService.approve(id, "system", remark));
         } catch (Exception e) {
             return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
         }
@@ -51,12 +50,11 @@ public class StockRequestController {
     @PostMapping("/{id}/reject")
     public org.springframework.http.ResponseEntity<?> reject(
             @PathVariable("id") Long id,
-            @RequestBody(required = false) StockRequestDecisionDTO dto,
-            org.springframework.security.core.Authentication authentication
+            @RequestBody(required = false) StockRequestDecisionDTO dto
     ) {
         try {
             String remark = dto == null ? null : dto.getRemark();
-            return org.springframework.http.ResponseEntity.ok(stockRequestService.reject(id, authentication.getName(), remark));
+            return org.springframework.http.ResponseEntity.ok(stockRequestService.reject(id, "system", remark));
         } catch (Exception e) {
             return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
         }
@@ -64,11 +62,10 @@ public class StockRequestController {
 
     @PostMapping("/{id}/receive")
     public org.springframework.http.ResponseEntity<?> receive(
-            @PathVariable("id") Long id,
-            org.springframework.security.core.Authentication authentication
+            @PathVariable("id") Long id
     ) {
         try {
-            return org.springframework.http.ResponseEntity.ok(stockRequestService.receive(id, authentication.getName()));
+            return org.springframework.http.ResponseEntity.ok(stockRequestService.receive(id, "system"));
         } catch (Exception e) {
             return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
         }

@@ -5,7 +5,6 @@ import com.kovanlabs.project.dto.UserDTO;
 import com.kovanlabs.project.model.*;
 import com.kovanlabs.project.repository.*;
 import jakarta.transaction.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,16 +14,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BusinessRepository businessRepository;
-    private final PasswordEncoder passwordEncoder;
     private final BranchRepository branchRepository;
 
     public UserService(UserRepository userRepository,
                        BusinessRepository businessRepository,
-                       BranchRepository branchRepository,
-                       PasswordEncoder passwordEncoder) {
+                       BranchRepository branchRepository) {
         this.userRepository = userRepository;
         this.businessRepository = businessRepository;
-        this.passwordEncoder = passwordEncoder;
         this.branchRepository = branchRepository;
     }
 
@@ -36,7 +32,7 @@ public class UserService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(dto.getPassword());
         user.setRole(role);
         user.setBusiness(business);
         user.setBranch(null);
@@ -48,7 +44,7 @@ public class UserService {
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        if (!dto.getPassword().equals(user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
@@ -63,7 +59,7 @@ public class UserService {
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        if (!dto.getPassword().equals(user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
@@ -114,7 +110,7 @@ public class UserService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(dto.getPassword());
         user.setRole(role);
         user.setBusiness(business);
         user.setBranch(branch);
@@ -133,7 +129,7 @@ public class UserService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPassword(dto.getPassword());
         user.setRole(Role.MANAGER);
         user.setBusiness(business);
         user.setBranch(branch);

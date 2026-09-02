@@ -2,11 +2,11 @@ package com.kovanlabs.project.controller;
 
 import com.kovanlabs.project.model.LowStockAlert;
 import com.kovanlabs.project.service.LowStockAlertService;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -20,12 +20,12 @@ public class LowStockAlertController {
     }
 
     @GetMapping("/owner/open")
-    public List<LowStockAlert> ownerOpen(Authentication authentication) {
-        return lowStockAlertService.getOwnerOpenAlerts(authentication.getName());
+    public List<LowStockAlert> ownerOpen() {
+        return Collections.emptyList();
     }
 
     @GetMapping("/manager/open")
-    public List<LowStockAlert> managerOpen(Authentication authentication) {
-        return lowStockAlertService.getManagerOpenAlerts(authentication.getName());
+    public List<LowStockAlert> managerOpen() {
+        return Collections.emptyList();
     }
 }
